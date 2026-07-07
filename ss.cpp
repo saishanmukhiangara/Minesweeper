@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#include <random>
 #define RESET     "\033[0m"
 #define RED       "\033[31m"
 #define GREEN     "\033[32m"
@@ -11,6 +12,9 @@
 #define BRIGHT_CYAN "\033[96m"
 
 using namespace std;
+
+random_device rd;
+mt19937 gen(rd());
 
 
 
@@ -96,63 +100,88 @@ if((r>=0&&r<rows)&&(c>=0&&c<col)&&(command=='R'||command=='F')) return true;
 else return false;
 }
 
-void place_mines(int ar,int ac){
-int m=0;
+void place_mines(int ar, int ac)
+{
+    uniform_int_distribution<int> rowDist(0, rows - 1);
+    uniform_int_distribution<int> colDist(0, col - 1);
 
-while(m<mines){
+    int m = 0;
 
-int ro=rand()%rows;
-int co=rand()%col;
-if((ro!=ar||co!=ac)&&board[ro][co]!='*'){
-board[ro][co]='*';
-m++;
-}
-}
-for(int i=0;i<rows;i++){
-for(int j=0;j<col;j++){
-int count=0;
-char subs='R';
-if(board[i][j]!='*'){
-for(int z=0;z<8;z++){
-if(is_valid(i+dr[z],j+dc[z],subs)&&board[i+dr[z]][j+dc[z]]=='*') count++;
-}
-board[i][j]=count+'0';
-}
-}
-}
-}
+    while (m < mines)
+    {
+        int ro = rowDist(gen);
+        int co = colDist(gen);
 
+        if ((ro != ar || co != ac) && board[ro][co] != '*')
+        {
+            board[ro][co] = '*';
+            m++;
+        }
+    }
 
-void reveal(int r,int c){
-if(r<0||r>=rows||c<0||c>=col||visited[r][c]) return;
-if(display[r][c]=='F'){
-cout<<"Flagged cell cannot be revealed, unflag it to reveal"<<endl;
-return;
-}
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < col; j++)
+        {
+            if (board[i][j] == '*')
+                continue;
 
-if(board[r][c]=='0'){
-display[r][c]=board[r][c];
-reveals++;
-visited[r][c]=true;
-for(int z=0;z<8;z++){
-reveal(r+dr[z],c+dc[z]);
-}
-}
-else {
-display[r][c]=board[r][c];
-reveals++;
-visited[r][c]=true;
-}
+            int count = 0;
+
+            for (int z = 0; z < 8; z++)
+            {
+                int nr = i + dr[z];
+                int nc = j + dc[z];
+
+                if (nr >= 0 && nr < rows &&
+                    nc >= 0 && nc < col &&
+                    board[nr][nc] == '*')
+                {
+                    count++;
+                }
+            }
+
+            board[i][j] = count + '0';
+        }
+    }
 }
 
-bool is_win(){
-if(reveals==(rows*col)-mines) return true;
-else return false;
+
+void reveal(int r, int c)
+{
+    if (r < 0 || r >= rows || c < 0 || c >= col || visited[r][c])
+        return;
+
+    if (display[r][c] == 'F')
+    {
+        cout << "Flagged cell cannot be revealed, unflag it to reveal\n";
+        return;
+    }
+
+    visited[r][c] = true;
+    display[r][c] = board[r][c];
+
+    if (board[r][c] == '*')
+    return;
+
+    reveals++;
+
+    if (board[r][c] == '0')
+    {
+        for (int z = 0; z < 8; z++)
+        {
+            reveal(r + dr[z], c + dc[z]);
+        }
+    }
+}
+
+bool is_win()
+{
+    return reveals == (rows * col) - mines;
 }
 
 
 int main(){
-srand(time(0));
    difficulty();
    print_table();
    int r;
@@ -163,18 +192,42 @@ srand(time(0));
    cout<<"command 'R' means reveal, 'F' means flag"<<endl;
    cout<<"Enter command of the form(row col command)"<<endl;
    cin>>r>>c>>command;
+   command = toupper(command);
    if (cin.fail()) {
     cin.clear();
     cin.ignore(1000, '\n');
     cout << "Invalid input format! Try again.\n";
     continue;
 }
-   if(is_valid(r,c,command)&&first_move){
-   place_mines(r,c);
-   first_move=false;
-   if(command=='R') reveal(r,c);
-      print_table();
-   }
+   if (is_valid(r, c, command) && first_move)
+{
+    if (command == 'R')
+{
+    if (display[r][c] == 'F')
+    {
+        cout << "Flagged cell cannot be revealed. Unflag it first.\n";
+    }
+    else
+    {
+        place_mines(r, c);
+        first_move = false;
+        reveal(r, c);
+    }
+}
+    else
+{
+    if(display[r][c] >= '0' && display[r][c] <= '8')
+    {
+        cout << "Cannot flag a revealed cell!\n";
+    }
+    else
+    {
+        display[r][c] = (display[r][c] == 'F') ? '*' : 'F';
+    }
+}
+
+    print_table();
+}
    else if(is_valid(r,c,command)&&!first_move){
    if(command=='R') {
    reveal(r,c);
@@ -195,10 +248,10 @@ srand(time(0));
    }
    }
    if(command=='F'){ 
-if(display[r][c] >= '0' && display[r][c] <= '8') {
+    if(display[r][c] >= '0' && display[r][c] <= '8') {
     cout << "Cannot flag a revealed cell!\n";
 }
-else display[r][c] = (display[r][c] == 'F') ? '*' : 'F';
+    else display[r][c] = (display[r][c] == 'F') ? '*' : 'F';
    }
    print_table();
    }

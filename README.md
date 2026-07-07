@@ -1,84 +1,132 @@
-# 💣 Terminal Minesweeper in C++
+# 🎮 Minesweeper Game (C++)
 
-A **terminal-based Minesweeper game** built in C++ with colored console output for a more interactive experience. Choose difficulty, reveal safe spots, flag mines, and avoid triggering them!
+A console-based implementation of the classic **Minesweeper** game developed in **C++** using the Standard Template Library (STL). The game supports multiple difficulty levels, safe first-click gameplay, recursive cell expansion using Depth First Search (DFS), and a colored terminal interface for an improved user experience.
 
-## 🧩 Features
+---
 
-- ✅ Easy, Medium, and Hard difficulty levels
-- ✅ First move is always safe
-- ✅ Colored cell numbers using ANSI escape codes
-- ✅ Recursive reveal for empty cells
-- ✅ Flag and unflag cells
-- ✅ Input validation
-- ✅ Win/loss detection
+## 📌 Features
 
-## 🎮 How to Play
+- 🎯 Three difficulty levels:
+  - Easy (9 × 9, 10 mines)
+  - Medium (16 × 16, 40 mines)
+  - Hard (16 × 30, 99 mines)
+- 💣 Random mine placement using modern C++ `mt19937`
+- ✅ Safe first reveal (the first revealed cell never contains a mine)
+- 🔄 Automatic expansion of empty cells using **Recursive DFS (Flood Fill)**
+- 🚩 Flag and unflag cells
+- 🎨 Colored console output for better gameplay
+- ✔️ Input validation and invalid move handling
+- 🏆 Automatic win and game-over detection
 
-1. **Compile the code:**
+---
 
-   ```bash
-   g++ -o minesweeper minesweeper.cpp
-   ```
+## 🛠️ Technologies Used
 
-2. **Run the game:**
+- C++
+- Standard Template Library (STL)
+- VS Code
+- Git & GitHub
 
-   ```bash
-   ./minesweeper
-   ```
+---
 
-3. **Commands:**
+## 🧠 Algorithms Used
 
-   - Input format: `row column command`
-     - `R` to Reveal
-     - `F` to Flag/Unflag
-   - Example:
-     ```
-     3 4 R
-     ```
-     Reveals the cell at row 3, column 4.
+### 1. Recursive Depth First Search (DFS)
+Used to reveal all connected empty cells when the player opens a cell with no adjacent mines.
 
-4. **Goal:**
-   - Reveal all non-mine cells to win.
-   - If you reveal a mine, the game is over.
+### 2. Random Mine Generation
+Implemented using the C++ `<random>` library with the `mt19937` random number generator for better randomness.
 
-## 🎨 Color Legend
+### 3. Matrix Traversal
+Used to calculate the number of neighbouring mines for every non-mine cell.
 
-| Cell | Meaning        | Color     |
-|------|----------------|-----------|
-| `*`  | Hidden Cell    | Default   |
-| `F`  | Flag           | Red       |
-| `0`  | Empty Cell     | White (dot `.`) |
-| `1`  | 1 adjacent mine| Blue      |
-| `2`  | 2 adjacent mines | Green    |
-| `3`  | 3 adjacent mines | Red     |
-| `4`  | 4 adjacent mines | Magenta |
-| `5`  | 5 adjacent mines | Yellow  |
-| `6`  | 6 adjacent mines | Cyan    |
-| `7`  | 7 adjacent mines | White   |
-| `8`  | 8 adjacent mines | Gray    |
+---
 
-> Colors may vary slightly depending on terminal.
+## 📂 Data Structures Used
 
-## 📁 Files
+- `vector<vector<char>>` – Stores the actual game board.
+- `vector<vector<char>>` – Stores the board displayed to the player.
+- `vector<vector<bool>>` – Tracks visited cells during DFS.
+- Direction arrays (`dr[]` and `dc[]`) – Used for efficient traversal of all eight neighbouring cells.
 
-```
-minesweeper.cpp   # Main game source
-README.md         # Project info
+---
+
+## ▶️ How to Run
+
+### Compile
+
+```bash
+g++ ss.cpp -o Minesweeper
 ```
 
-## ⚙️ Requirements
+### Run
 
-- C++11 or above
-- A terminal that supports ANSI escape codes
-  - ✅ Linux/macOS terminals
-  - ⚠️ On Windows, use WSL or a compatible terminal like Git Bash
+#### Windows
 
-## 🚀 Future Ideas
+```bash
+Minesweeper.exe
+```
 
-- Add a timer
-- Custom board size and mine count
-- GUI version using SFML or Qt
+#### Linux / macOS
 
-## 📜 License
+```bash
+./Minesweeper
+```
 
-This project is open-source and available under the **MIT License**.
+---
+
+## 📸 Gameplay
+
+Choose a difficulty level:
+
+```
+1. Easy
+2. Medium
+3. Hard
+```
+
+Enter moves in the format:
+
+```
+row column command
+```
+
+Example:
+
+```
+3 4 R
+```
+
+- `R` → Reveal a cell
+- `F` → Flag or unflag a cell
+
+---
+
+## 📈 Time Complexity
+
+| Operation | Complexity |
+|----------|------------|
+| Mine Placement | O(R × C) |
+| Reveal (Worst Case) | O(R × C) |
+| Print Board | O(R × C) |
+| Win Check | O(1) |
+
+where **R** is the number of rows and **C** is the number of columns.
+
+---
+
+## 🚀 Future Enhancements
+
+- ⏱️ Timer
+- 🏆 High-score tracking
+- 🎮 Custom board size
+- 💾 Save and load game
+- 🖥️ Graphical User Interface (GUI)
+
+---
+
+## 👩‍💻 Author
+
+**Sai Shanmukhi Angara**
+
+GitHub: https://github.com/saishanmukhiangara
